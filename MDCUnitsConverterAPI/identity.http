@@ -1,0 +1,82 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@SERVER=localhost
+@PORT=7209
+
+# Set to unique email
+@USER=youremail@example.com
+@PWD=pA$$w0rd4demo
+
+#you'll have to update these tokens after a call to Login
+@ACCESS_TOKEN=CfDJ8Kfp6t61gitNlGDZi4wTMzisRgTWaa6_YSiPVqjCbORaXKi80Qs4jKAb-uhqjtkkH0xH6AwO3FDDlHHOKKq2a7_I5HFp5Lft8KmDcKvj0ey9IAjgNs08eZtjm02e0PIQQtHttnah58jN19CrbtdqeV1w0NvFzb5pn4aKiDNZJT_sbG8cOgMuyiuOggMynOGh1_bLasVHLUe1lpj3-HQhT0nUqJ_5SLhPGBLEW7x33n7Bz3yOplOInNRESWPcFne-iOFgmKmBGpmHBSqZLFocGZ9Ao5VsvS5DbrYkKqEQnPZUMdiBuvpH6FYG0JuQ7ItLpng541g4YyqvrZgdoUN1AI8ZnfXtrfGdR5wOeptcDGpIXHQCrUzlvB2qD1h5EGzHsX-oUQfIPukgS_FNv1c7jah2jlwGl_17WuGKIVDziw5_4yt4dXrhfpJUret3YvctxlHaeg4fapb6S-GIuEin8bs6boWxszFUgcnu8j83XMdQtDsO58_-xqyFJ6JlTcqqlevnCsxU7n9TuauZIZyf41G6mHOUHXP898lPm8yLED-p_eg6PN_C9KF7JI2Fkrj9rvVioLPo13rKEuNXlvsR4cdfdFKjDZFnqdJB-VtyxOdBp0x8fqKVYHqYCTqS4W1GAyGlN8OKsyO5QEdxR0iEZMXh4zAXyPNouWR21UQwLixfQyli7cfT9r6bxBG4MYtLFg
+@REFRESH_TOKEN=CfDJ8Kfp6t61gitNlGDZi4wTMzjdCXrXxYZy6lJqaKDKugG0K8CybSqg-APSWaIlVZD7ovqcIvdnLMCkt4mfInZXfg9KWG8G9c3GvXAmbm3aV49OXwPzITUExV50103X0SFQUL-YQhs-sNGyYFH8ih9ep8fMbgwKGDzMudcviHT2bMjwGpK8uyT3lXelNhwXR1uklnXIxfBrRzSu3iGi7jSTgJ6WZBuuBPu0bdUGboynEpGnQBQpePe_G_TAmgwH-MuqdH6cZGWu_Vj-x-0CMuaotx4_FL3m2A-CmzTxb8EsdNgWZ672hIZ1QmJfAVpVWzICZOgmqy9IEU2qNkCFFOpZKwqlAz0yhuhXdS7L-4AMQFV6oMs3Mi57GIxukeG8CkdWYEi5xszfzAx74_p4AmLHj9GaIoaZ3D1XewkwbnQtyS0lXZrGObVqbLAOitwp_j2WdfgPxom8o7MBMUJs9zXm44fVwOp5zd1U8Sb35mYfT0_t_uAW5eXI2isPrNeZxAxT_zgmiPF7V_pMacP4WyBcg6vMENsmy8KLYYaA1-Bi5WiaXLrIag2zUXPPmr8DWfykU-709s2Fia7HZFCVSFpPgh-m7flNf5N7p2yD1qS9GQE3wYXZGIFupQXTlvaJ1Mom12T8XUoPnY2ya0DPtpN1_6VQN32BtEAWoU62T7864cJmZ-pnGOEgN3beiQox4lk3Ng
+
+# this should fail until you have logged in and then upated the @ACCESS_TOKEN variable
+
+GET https://{{SERVER}}:{{PORT}}/weatherforecast/
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+###
+
+# first call to register your user account
+# required before making any login calls
+POST https://{{SERVER}}:{{PORT}}/identity/register
+Content-type: application/json
+Accept: application/json
+
+{
+    "email":"{{USER}}",
+    "password":"{{PWD}}"
+}
+###
+
+POST https://{{SERVER}}:{{PORT}}/identity/login
+Content-type: application/json
+
+{
+    "email":"{{USER}}",
+    "password":"{{PWD}}"
+}
+###
+
+POST https://{{SERVER}}:{{PORT}}/identity/refresh
+Content-type: application/json
+
+{
+    "refreshToken":"{{REFRESH_TOKEN}}"
+}
+###
+
+GET https://{{SERVER}}:{{PORT}}/identity/manage/info
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+###
+
+GET https://{{SERVER}}:{{PORT}}/MyIdentity/Role
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+###
+
+#  ROLES ADDITIONAL Example
+# Creates a new role called Demo users
+POST https://{{SERVER}}:{{PORT}}/MyIdentity/Role
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+"DemoUsers"
+###
+
+# adds user to the demo role
+# now you can enable add role authorization on the controller
+POST https://{{SERVER}}:{{PORT}}/MyIdentity/UserRole
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+{
+    "userName":"{{USER}}",
+    "roleName":"DemoUsers"
+}
+
+###
